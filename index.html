@@ -68,7 +68,7 @@
     background: linear-gradient(180deg, rgba(255,198,48,.05), rgba(255,198,48,0) 30%);
   }
 
-  .grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px 8px; }
+  .grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px 10px; }
 
   .card{
     background:#fff; border:none; border-radius:14px; overflow:hidden;
@@ -80,16 +80,19 @@
   }
   .card.is-pressed{ transform:scale(1.08); box-shadow:0 10px 22px rgba(0,0,0,.4); z-index:3; }
 
-  .card-icon{ flex:1; display:flex; align-items:center; justify-content:center; padding:14px 6px 8px; min-height:50px; }
-  .card-icon img{ width:28px; height:28px; object-fit:contain; border-radius:6px; }
+  .card-icon{ 
+    flex:1; display:flex; align-items:center; justify-content:center; 
+    padding:0; height: 70px; background: #e0e0e0; width: 100%;
+  }
+  .card-icon img{ width: 100%; height: 100%; object-fit: cover; }
   .card-icon .fallback-letter{
-    width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center;
-    font-family:'Baloo 2'; font-weight:700; font-size:13px; color:#fff;
+    width: 100%; height: 100%; display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2'; font-weight:700; font-size:24px; color:#fff;
   }
 
   .card-label{
-    background:var(--card-bottom); color:var(--text-soft); font-size:10.5px; font-weight:600;
-    text-align:center; padding:6px 4px 7px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    background:var(--card-bottom); color:var(--text-soft); font-size:11px; font-weight:600;
+    text-align:center; padding:8px 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
 
   /* ---------- WEBVIEW ---------- */
@@ -102,39 +105,22 @@
   #webviewScreen.open{ transform:translateX(0); }
 
   .webview-topbar{
-    display:flex; align-items:center; gap:10px;
-    padding: 14px 12px; background:#161616;
+    display:flex; align-items:center; justify-content: space-between;
+    padding: 10px 12px; background:#161616;
     border-bottom:1px solid #262626;
     flex-shrink:0;
   }
-  .wv-back{
+  .wv-topbar-left {
+    display: flex; gap: 8px;
+  }
+  .wv-btn{
     width:34px; height:34px; border-radius:10px; border:none;
     background:#262626; color:#fff; font-size:18px;
     display:flex; align-items:center; justify-content:center; cursor:pointer;
+    flex-shrink:0; transition: transform .1s;
   }
-  .wv-back:active{ transform:scale(.92); }
-
-  .wv-favicon{ width:22px; height:22px; border-radius:5px; background:#fff; flex-shrink:0; }
-  .wv-info{ min-width:0; flex:1; }
-  .wv-title{ font-size:13.5px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .wv-url{ font-size:10.5px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-  .wv-translate{
-    width:34px; height:34px; border-radius:10px; border:none;
-    background:#262626; color:var(--yellow); font-size:15px;
-    display:flex; align-items:center; justify-content:center; cursor:pointer;
-    flex-shrink:0;
-  }
-  .wv-translate:active{ transform:scale(.92); }
-  .wv-translate svg{ width:17px; height:17px; }
-  .wv-translate.active{ background:var(--yellow); color:var(--ink); }
-
-  .wv-open-browser{
-    width:34px; height:34px; border-radius:10px; border:none;
-    background:#262626; color:var(--yellow); font-size:15px;
-    display:flex; align-items:center; justify-content:center; cursor:pointer;
-    flex-shrink:0;
-  }
+  .wv-btn:active{ transform:scale(.92); }
+  .wv-btn.highlight { color: var(--yellow); }
 
   .wv-body{ flex:1; position:relative; background:#0e0e0e; }
   .wv-body iframe{ width:100%; height:100%; border:none; background:#fff; }
@@ -158,9 +144,9 @@
   .wv-blocked.show{ display:flex; }
   .wv-blocked-icon{
     width:56px; height:56px; border-radius:16px; background:#fff;
-    display:flex; align-items:center; justify-content:center;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
   }
-  .wv-blocked-icon img{ width:32px; height:32px; object-fit:contain; }
+  .wv-blocked-icon img{ width:100%; height:100%; object-fit:cover; }
   .wv-blocked h3{ font-family:'Baloo 2'; font-size:17px; color:#fff; margin:0; }
   .wv-blocked p{ font-size:13px; color:var(--text-dim); margin:0; line-height:1.5; max-width:280px; }
   .wv-blocked button{
@@ -170,70 +156,82 @@
   }
   .wv-blocked button:active{ transform:scale(.96); }
 
-  /* ---------- BOTTOM NAVBAR ---------- */
-  #navbar{
-    position:fixed; left:0; right:0; bottom:0;
-    display:flex; justify-content:space-around; align-items:center;
-    background:#1a1a1a; border-top:1px solid #2a2a2a;
-    padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
-    z-index:30;
+  /* ---------- FAB (Floating Action Button) DI KIRI TENGAH ---------- */
+  .fab-menu {
+    position: fixed; left: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--yellow); color: var(--ink);
+    border: none; box-shadow: 0 4px 12px rgba(0,0,0,.4);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 30; transition: transform .2s;
+  }
+  .fab-menu:active { transform: translateY(-50%) scale(0.85); }
+  .fab-menu svg { width: 22px; height: 22px; }
+
+  /* ---------- SIDE MENU (Sidebar) ---------- */
+  #sideBackdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,.6);
+    opacity: 0; pointer-events: none; transition: opacity .3s ease;
+    z-index: 35; backdrop-filter: blur(2px);
+  }
+  #sideBackdrop.open { opacity: 1; pointer-events: auto; }
+
+  #sideMenu {
+    position: fixed; left: 0; top: 0; bottom: 0;
+    width: 280px; max-width: 80%; background: #1a1a1a;
+    border-right: 2px solid #2a2a2a;
+    transform: translateX(-100%); transition: transform .3s cubic-bezier(.32,.72,.35,1);
+    z-index: 36; display: flex; flex-direction: column;
+  }
+  #sideMenu.open { transform: translateX(0); }
+
+  .side-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 16px 14px; border-bottom: 1px solid #2a2a2a;
+  }
+  .side-header h2 {
+    margin: 0; font-family: 'Baloo 2'; font-size: 20px; color: var(--yellow);
+  }
+  .side-close {
+    background: none; border: none; color: #fff; font-size: 20px;
+    cursor: pointer; padding: 4px; border-radius: 8px;
   }
 
-  .nav-btn{
-    background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:4px;
-    color:var(--text-dim); font-family:'Inter'; font-weight:600; font-size:10.5px; cursor:pointer;
-    padding:4px 14px; border-radius:12px; transition: color .15s ease, background .15s ease, transform .15s ease;
-  }
-  .nav-btn.active{ color:var(--yellow); background:rgba(255,198,48,.1); }
-  .nav-btn:active{ transform:scale(.92); }
-  .nav-icon{ width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
-  .nav-icon svg{ width:22px; height:22px; }
+  .side-content { flex: 1; overflow-y: auto; padding: 12px 12px 24px; }
+  .side-content::-webkit-scrollbar { width: 6px; }
+  .side-content::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
 
-  /* ---------- MINI MENU (popup above navbar) ---------- */
-  #miniMenuBackdrop{
-    position:fixed; inset:0; background:rgba(0,0,0,.45);
-    opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:25;
+  .side-item-btn {
+    display: flex; align-items: center; gap: 12px; width: 100%;
+    background: none; border: none; text-align: left;
+    padding: 12px; border-radius: 12px; cursor: pointer;
+    color: #fff; font-family: 'Inter'; font-weight: 600; font-size: 15px;
+    transition: background .15s ease; margin-bottom: 6px;
   }
-  #miniMenuBackdrop.open{ opacity:1; pointer-events:auto; }
-
-  #miniMenu{
-    position:fixed; left:12px; right:12px; bottom:78px;
-    background:#1e1e1e; border:1.5px solid rgba(255,198,48,.35); border-radius:18px;
-    padding:14px; z-index:26;
-    transform: translateY(12px) scale(.98); opacity:0; pointer-events:none;
-    transition: transform .22s cubic-bezier(.32,.72,.35,1), opacity .2s ease;
+  .side-item-btn:active { background: rgba(255,198,48,.1); }
+  .side-item-btn.cat-btn { background: #242424; border: 1px solid #333; }
+  
+  .side-item-icon {
+    width: 32px; height: 32px; border-radius: 8px; background: #fff; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
   }
-  #miniMenu.open{ transform:translateY(0) scale(1); opacity:1; pointer-events:auto; }
-
-  .mini-menu-title{
-    font-family:'Baloo 2'; font-weight:700; font-size:14px; color:var(--yellow);
-    margin:0 0 10px 4px;
+  .side-item-icon img { width: 100%; height: 100%; object-fit: cover; }
+  .side-item-icon .fallback-letter {
+    font-family: 'Baloo 2'; font-weight: 700; font-size: 14px; color: #fff;
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
   }
 
-  .mini-menu-list{ display:flex; flex-direction:column; gap:4px; }
-
-  .mini-item{
-    display:flex; align-items:center; gap:12px;
-    background:none; border:none; width:100%; text-align:left;
-    padding:9px 8px; border-radius:12px; cursor:pointer;
-    transition: background .15s ease, transform .1s ease;
+  .side-back-btn {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    background: transparent; border: 1px solid var(--yellow); color: var(--yellow);
+    padding: 10px 12px; border-radius: 10px; cursor: pointer;
+    font-family: 'Inter'; font-weight: 700; font-size: 14px;
+    margin-bottom: 16px;
   }
-  .mini-item:active{ transform:scale(.98); background:rgba(255,255,255,.06); }
+  .side-back-btn:active { background: rgba(255,198,48,.1); }
 
-  .mini-item-icon{
-    width:30px; height:30px; border-radius:8px; background:#fff; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .mini-item-icon img{ width:18px; height:18px; object-fit:contain; }
-  .mini-item-icon .fallback-letter{ font-family:'Baloo 2'; font-weight:700; font-size:11px; color:#fff; width:100%; height:100%; border-radius:8px; display:flex; align-items:center; justify-content:center; }
-
-  .mini-item-text{ font-size:13.5px; font-weight:600; color:#fff; }
-
-  @media (prefers-reduced-motion: reduce){
-    .card, #webviewScreen, #miniMenu, #miniMenuBackdrop, #confirmBackdrop, #confirmSheet{ transition:none !important; }
-  }
-
-  /* ---------- CONFIRM MODAL (before entering webview) ---------- */
+  /* ---------- CONFIRM MODAL ---------- */
   #confirmBackdrop{
     position:fixed; inset:0; background:rgba(0,0,0,.55);
     backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
@@ -242,7 +240,6 @@
     z-index:40;
   }
   #confirmBackdrop.open{ opacity:1; pointer-events:auto; }
-
   #confirmSheet{
     width:100%; max-width:480px; background:#1e1e1e;
     border:1.5px solid rgba(255,198,48,.35); border-bottom:none;
@@ -250,27 +247,18 @@
     transform:translateY(100%); transition:transform .3s cubic-bezier(.32,.72,.35,1);
   }
   #confirmBackdrop.open #confirmSheet{ transform:translateY(0); }
-
   .confirm-handle{ width:40px; height:4px; background:#444; border-radius:999px; margin:0 auto 16px; }
-
   .confirm-head{ display:flex; align-items:center; gap:12px; margin-bottom:14px; }
-  .confirm-icon{ width:44px; height:44px; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .confirm-icon{ width:44px; height:44px; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;}
+  .confirm-icon img{ width:100%; height:100%; object-fit:cover; }
   .confirm-title{ font-family:'Baloo 2'; font-weight:700; font-size:17px; color:#fff; margin:0; }
   .confirm-sub{ font-size:12px; color:var(--text-dim); margin:2px 0 0; word-break:break-all; }
-
-  .confirm-note{
-    display:flex; gap:8px; align-items:flex-start;
-    background:rgba(255,198,48,.08); border:1px solid rgba(255,198,48,.25);
-    border-radius:12px; padding:10px 12px; margin-bottom:16px;
-  }
-  .confirm-note-icon{ font-size:14px; line-height:1.3; flex-shrink:0; }
-  .confirm-note p{ margin:0; font-size:11.5px; line-height:1.5; color:var(--text-soft); }
-
-  .confirm-actions{ display:flex; gap:10px; }
+  
+  .confirm-actions{ display:flex; gap:10px; margin-top: 24px;}
   .confirm-btn{
-    flex:1; border:none; border-radius:14px; padding:13px 10px;
+    flex:1; border:none; border-radius:14px; padding:14px 10px;
     font-family:'Inter'; font-weight:700; font-size:14.5px; cursor:pointer;
-    transition: transform .12s ease, filter .12s ease;
+    transition: transform .12s ease;
   }
   .confirm-btn:active{ transform:scale(.96); }
   .confirm-btn.cancel{ background:#2c2c2c; color:var(--text-soft); }
@@ -291,17 +279,18 @@
 
   <div id="webviewScreen">
     <div class="webview-topbar">
-      <button class="wv-back" id="wvBack">‹</button>
-      <div class="wv-favicon" id="wvFavicon"></div>
-      <div class="wv-info">
-        <div class="wv-title" id="wvTitle">Situs</div>
-        <div class="wv-url" id="wvUrl">https://example.com</div>
+      <!-- Kumpulan tombol fungsi di kiri -->
+      <div class="wv-topbar-left">
+        <button class="wv-btn" id="wvBack" title="Tutup">‹</button>
+        <button class="wv-btn" id="wvHome" title="Ke Home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </button>
       </div>
-      <button class="wv-translate" id="wvTranslate" title="Terjemahkan ke Indonesia">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h7M7 4v2M6 8c.5 2 2 4 4 5M13 8c-1 3-3 5.5-6 7"/><path d="M14 18l3-8 3 8M14.5 16h5"/></svg>
-      </button>
-      <button class="wv-open-browser" id="wvOpenBrowser" title="Buka di browser">↗</button>
+      
+      <!-- Nama dan URL udah dipenggal, langsung tombol browser di kanan -->
+      <button class="wv-btn highlight" id="wvOpenBrowser" title="Buka di browser">↗</button>
     </div>
+    
     <div class="wv-body">
       <iframe id="wvIframe" src="about:blank" referrerpolicy="no-referrer"
         sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"></iframe>
@@ -312,39 +301,29 @@
       <div class="wv-blocked" id="wvBlocked">
         <div class="wv-blocked-icon" id="wvBlockedIcon"></div>
         <h3 id="wvBlockedTitle">Situs ini tidak bisa ditampilkan di dalam app</h3>
-        <p>Beberapa situs mengunci diri agar hanya bisa dibuka lewat browser penuh. Buka di browser untuk melanjutkan.</p>
+        <p>Situs ini mengunci diri dari iframe (keamanan server). Buka di browser aslinya buat lanjut cuy.</p>
         <button id="wvBlockedOpen">Buka di browser</button>
       </div>
     </div>
   </div>
 
-  <div id="navbar">
-    <button class="nav-btn active" data-cat="17">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-      </span>
-      17
-    </button>
-    <button class="nav-btn" data-cat="sport">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M6 6l12 12M18 6L6 18"/></svg>
-      </span>
-      Sport
-    </button>
-    <button class="nav-btn" data-cat="daily">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 3v18M3 9h18"/></svg>
-      </span>
-      Daily
-    </button>
-  </div>
+  <!-- FAB Di Kiri Tengah Layar -->
+  <button id="fabBtn" class="fab-menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+  </button>
 
 </div>
 
-<div id="miniMenuBackdrop"></div>
-<div id="miniMenu">
-  <p class="mini-menu-title" id="miniMenuTitle">Kategori</p>
-  <div class="mini-menu-list" id="miniMenuList"></div>
+<!-- Backdrop & Side Menu Sidebar -->
+<div id="sideBackdrop"></div>
+<div id="sideMenu">
+  <div class="side-header">
+    <h2 id="sideTitle">Menu</h2>
+    <button id="sideClose" class="side-close">✕</button>
+  </div>
+  <div class="side-content" id="sideContent">
+    <!-- Konten diisi via JS -->
+  </div>
 </div>
 
 <div id="confirmBackdrop">
@@ -357,19 +336,22 @@
         <p class="confirm-sub" id="confirmUrl">https://example.com</p>
       </div>
     </div>
-    <div class="confirm-note">
-      <span class="confirm-note-icon">🛡️</span>
-      <p>Dibuka di dalam app dengan pop-up &amp; redirect paksa diblokir. Konten dari situs asli tetap di luar kendali kami, jadi sebagian iklan bawaan situs mungkin masih muncul.</p>
-    </div>
     <div class="confirm-actions">
       <button class="confirm-btn cancel" id="confirmCancel">Batal</button>
-      <button class="confirm-btn go" id="confirmGo">Buka</button>
+      <button class="confirm-btn go" id="confirmGo">Buka Link</button>
     </div>
   </div>
 </div>
 
 <script>
 const LISTING_DATA = [
+  { key:"daily", label:"Daily", items:[
+    { title:"TikTok", url:"https://www.tiktok.com/id-ID/", domain:"www.tiktok.com", fallbackColor:"#000000" },
+    { title:"Instagram", url:"https://www.instagram.com/", domain:"www.instagram.com", fallbackColor:"#C1327A" },
+    { title:"X", url:"https://x.com/", domain:"x.com", fallbackColor:"#000000" },
+    { title:"RCTI+", url:"https://www.rctiplus.com/", domain:"www.rctiplus.com", fallbackColor:"#FF0000" },
+    { title:"Vidio", url:"https://www.vidio.com/", domain:"www.vidio.com", fallbackColor:"#E50914" }
+  ]},
   { key:"17", label:"17", items:[
     { title:"Manhwaweb", url:"https://manhwaweb.com/", domain:"manhwaweb.com", fallbackColor:"#6C4AB6" },
     { title:"Mangapoi", url:"https://v2.mangapoi.one/", domain:"v2.mangapoi.one", fallbackColor:"#2E8B57" },
@@ -379,28 +361,27 @@ const LISTING_DATA = [
   { key:"sport", label:"Sport", items:[
     { title:"UEFA", url:"https://www.uefa.com/", domain:"www.uefa.com", fallbackColor:"#004C99" },
     { title:"FIFA", url:"https://www.fifa.com/", domain:"www.fifa.com", fallbackColor:"#0A2A6B" },
-    { title:"LaLiga", url:"https://www.laliga.com/en-GB/", domain:"www.laliga.com", fallbackColor:"#EE2624" },
+    { title:"LaLiga", url:"https://www.laliga.com/en-GB/laliga-easports/standing", domain:"www.laliga.com", fallbackColor:"#EE2624" },
     { title:"Transfermarkt", url:"https://www.transfermarkt.co.id/", domain:"www.transfermarkt.co.id", fallbackColor:"#1A7A3C" },
-    { title:"EPL", url:"https://www.premierleague.com/", domain:"www.premierleague.com", fallbackColor:"#3D0E5C" }
-  ]},
-  { key:"daily", label:"Daily", items:[
-    { title:"TikTok", url:"https://www.tiktok.com/id-ID/", domain:"www.tiktok.com", fallbackColor:"#000000" },
-    { title:"Instagram", url:"https://www.instagram.com/", domain:"www.instagram.com", fallbackColor:"#C1327A" },
-    { title:"X", url:"https://x.com/", domain:"x.com", fallbackColor:"#000000" }
+    { title:"EPL", url:"https://www.premierleague.com/", domain:"www.premierleague.com", fallbackColor:"#3D0E5C" },
+    { title:"Yalla Kora", url:"https://www.yallakora.com/matches-center", domain:"www.yallakora.com", fallbackColor:"#000000" },
+    { title:"Yalla Shoot", url:"https://yallashoot.space/", domain:"yallashoot.space", fallbackColor:"#000000" }
   ]}
 ];
 
 (function(){
   const categoriesRoot = document.getElementById("categories");
   const home = document.getElementById("home");
-  const navbar = document.getElementById("navbar");
-  const navBtns = [...navbar.querySelectorAll(".nav-btn")];
 
-  const miniMenuBackdrop = document.getElementById("miniMenuBackdrop");
-  const miniMenu = document.getElementById("miniMenu");
-  const miniMenuTitle = document.getElementById("miniMenuTitle");
-  const miniMenuList = document.getElementById("miniMenuList");
+  // Komponen Sidebar Menu
+  const fabBtn = document.getElementById("fabBtn");
+  const sideBackdrop = document.getElementById("sideBackdrop");
+  const sideMenu = document.getElementById("sideMenu");
+  const sideTitle = document.getElementById("sideTitle");
+  const sideContent = document.getElementById("sideContent");
+  const sideClose = document.getElementById("sideClose");
 
+  // Komponen Pop Up Confirm
   const confirmBackdrop = document.getElementById("confirmBackdrop");
   const confirmIcon = document.getElementById("confirmIcon");
   const confirmTitle = document.getElementById("confirmTitle");
@@ -408,13 +389,11 @@ const LISTING_DATA = [
   const confirmCancel = document.getElementById("confirmCancel");
   const confirmGo = document.getElementById("confirmGo");
 
+  // Komponen Webview 
   const webviewScreen = document.getElementById("webviewScreen");
   const wvBack = document.getElementById("wvBack");
-  const wvFavicon = document.getElementById("wvFavicon");
-  const wvTitle = document.getElementById("wvTitle");
-  const wvUrl = document.getElementById("wvUrl");
+  const wvHome = document.getElementById("wvHome");
   const wvOpenBrowser = document.getElementById("wvOpenBrowser");
-  const wvTranslate = document.getElementById("wvTranslate");
   const wvIframe = document.getElementById("wvIframe");
   const wvLoading = document.getElementById("wvLoading");
   const wvBlocked = document.getElementById("wvBlocked");
@@ -424,40 +403,24 @@ const LISTING_DATA = [
 
   let currentItem = null;
   let loadTimer = null;
-  let activeCat = "17";
-  let isTranslated = false;
-
-  function translateUrl(url){
-    return `https://translate.google.com/translate?sl=auto&tl=id&u=${encodeURIComponent(url)}`;
-  }
 
   function faviconUrl(domain){
-    return `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
+    return `https://www.google.com/s2/favicons?sz=128&domain=${domain}`;
   }
 
-  function iconEl(item, size){
+  function iconEl(item){
     const wrap = document.createElement("div");
+    wrap.style.width = "100%";
+    wrap.style.height = "100%";
     const img = document.createElement("img");
     img.src = faviconUrl(item.domain);
     img.alt = "";
     img.loading = "lazy";
-    img.style.width = size + "px";
-    img.style.height = size + "px";
-    img.style.objectFit = "contain";
     img.onerror = () => {
       wrap.innerHTML = "";
       const fb = document.createElement("div");
       fb.className = "fallback-letter";
-      fb.style.width = size + "px";
-      fb.style.height = size + "px";
       fb.style.background = item.fallbackColor || "#555";
-      fb.style.borderRadius = "7px";
-      fb.style.display = "flex";
-      fb.style.alignItems = "center";
-      fb.style.justifyContent = "center";
-      fb.style.fontFamily = "'Baloo 2'";
-      fb.style.fontWeight = "700";
-      fb.style.color = "#fff";
       fb.textContent = item.title.charAt(0);
       wrap.appendChild(fb);
     };
@@ -469,11 +432,10 @@ const LISTING_DATA = [
     const card = document.createElement("button");
     card.type = "button";
     card.className = "card";
-    card.setAttribute("aria-label", `Buka ${item.title}`);
 
     const iconWrap = document.createElement("div");
     iconWrap.className = "card-icon";
-    iconWrap.appendChild(iconEl(item, 28));
+    iconWrap.appendChild(iconEl(item));
     card.appendChild(iconWrap);
 
     const label = document.createElement("div");
@@ -486,7 +448,6 @@ const LISTING_DATA = [
     card.addEventListener("pointerdown", press);
     card.addEventListener("pointerup", release);
     card.addEventListener("pointerleave", release);
-    card.addEventListener("pointercancel", release);
     card.addEventListener("click", () => requestOpen(item));
 
     return card;
@@ -517,7 +478,78 @@ const LISTING_DATA = [
     LISTING_DATA.forEach(section => categoriesRoot.appendChild(buildCategory(section)));
   }
 
-  // ---------- Confirm before entering webview ----------
+  // --- LOGIKA SIDE MENU ---
+  function openSideMenu() {
+    sideBackdrop.classList.add("open");
+    sideMenu.classList.add("open");
+    renderSideCategories();
+  }
+
+  function closeSideMenu() {
+    sideBackdrop.classList.remove("open");
+    sideMenu.classList.remove("open");
+  }
+
+  function renderSideCategories() {
+    sideTitle.textContent = "Menu Kategori";
+    sideContent.innerHTML = "";
+    
+    LISTING_DATA.forEach(section => {
+      const btn = document.createElement("button");
+      btn.className = "side-item-btn cat-btn";
+      
+      const iconWrap = document.createElement("div");
+      iconWrap.className = "side-item-icon";
+      iconWrap.innerHTML = `<div class="fallback-letter" style="background:#444;">${section.label.charAt(0)}</div>`;
+      
+      const labelSpan = document.createElement("span");
+      labelSpan.textContent = section.label;
+      
+      btn.appendChild(iconWrap);
+      btn.appendChild(labelSpan);
+      
+      btn.addEventListener("click", () => renderSideItems(section));
+      sideContent.appendChild(btn);
+    });
+  }
+
+  function renderSideItems(section) {
+    sideTitle.textContent = section.label;
+    sideContent.innerHTML = "";
+
+    const backBtn = document.createElement("button");
+    backBtn.className = "side-back-btn";
+    backBtn.innerHTML = `‹ Kembali ke Kategori`;
+    backBtn.addEventListener("click", renderSideCategories);
+    sideContent.appendChild(backBtn);
+
+    section.items.forEach(item => {
+      const btn = document.createElement("button");
+      btn.className = "side-item-btn";
+
+      const iconWrap = document.createElement("div");
+      iconWrap.className = "side-item-icon";
+      iconWrap.appendChild(iconEl(item));
+
+      const labelSpan = document.createElement("span");
+      labelSpan.textContent = item.title;
+
+      btn.appendChild(iconWrap);
+      btn.appendChild(labelSpan);
+
+      btn.addEventListener("click", () => {
+        closeSideMenu();
+        requestOpen(item);
+      });
+      sideContent.appendChild(btn);
+    });
+  }
+
+  fabBtn.addEventListener("click", openSideMenu);
+  sideClose.addEventListener("click", closeSideMenu);
+  sideBackdrop.addEventListener("click", closeSideMenu);
+
+  // --- LOGIKA BUKA WEBVIEW ---
   let pendingItem = null;
 
   function requestOpen(item){
@@ -525,7 +557,7 @@ const LISTING_DATA = [
     confirmTitle.textContent = item.title;
     confirmUrl.textContent = item.url;
     confirmIcon.innerHTML = "";
-    confirmIcon.appendChild(iconEl(item, 26));
+    confirmIcon.appendChild(iconEl(item));
     confirmBackdrop.classList.add("open");
   }
 
@@ -538,24 +570,20 @@ const LISTING_DATA = [
   confirmBackdrop.addEventListener("click", (e) => {
     if (e.target === confirmBackdrop) closeConfirm();
   });
+  
   confirmGo.addEventListener("click", () => {
     if (pendingItem){
       const item = pendingItem;
       closeConfirm();
-      openWebview(item);
+      openWebview(item); 
     }
   });
 
-  // ---------- Webview ----------
   function openWebview(item){
     currentItem = item;
-    isTranslated = false;
-    wvTranslate.classList.remove("active");
-    wvTitle.textContent = item.title;
-    wvUrl.textContent = item.url;
-
-    wvFavicon.innerHTML = "";
-    wvFavicon.appendChild(iconEl(item, 22));
+    
+    // JS buat nampilin judul sama URL udah gw cabut
+    // Karena emang komponen HTML-nya udah dibabat 
 
     wvBlocked.classList.remove("show");
     wvLoading.style.opacity = "1";
@@ -566,20 +594,12 @@ const LISTING_DATA = [
     webviewScreen.classList.add("open");
 
     clearTimeout(loadTimer);
-    // If the site blocks embedding, the load/error events from a cross-origin
-    // iframe won't reliably fire — so we fall back to a friendly "blocked" screen
-    // after a short grace period if nothing has rendered.
     loadTimer = setTimeout(() => showBlocked(item), 3500);
   }
 
   wvIframe.addEventListener("load", () => {
     if (wvIframe.src === "about:blank") return;
     clearTimeout(loadTimer);
-    // Try to detect an actually-blocked page (many CSP blocks still fire "load"
-    // on an empty/error document). We can't read cross-origin content, so we
-    // give the frame a brief moment to paint, then just reveal it — if it was
-    // truly blocked, the browser will already show its own refusal message
-    // and the user has the "buka di browser" fallback button anytime.
     wvLoading.style.opacity = "0";
     setTimeout(() => { wvLoading.style.display = "none"; }, 250);
     wvIframe.style.visibility = "visible";
@@ -588,13 +608,9 @@ const LISTING_DATA = [
   function showBlocked(item){
     wvLoading.style.display = "none";
     wvIframe.style.visibility = "hidden";
-    if (isTranslated){
-      wvBlockedTitle.textContent = `Versi terjemahan tidak bisa ditampilkan di dalam app`;
-    } else {
-      wvBlockedTitle.textContent = `${item.title} tidak bisa ditampilkan di dalam app`;
-    }
+    wvBlockedTitle.textContent = `${item.title} nggak mau dibuka di sini`;
     wvBlockedIcon.innerHTML = "";
-    wvBlockedIcon.appendChild(iconEl(item, 32));
+    wvBlockedIcon.appendChild(iconEl(item));
     wvBlocked.classList.add("show");
   }
 
@@ -606,91 +622,21 @@ const LISTING_DATA = [
 
   wvBack.addEventListener("click", closeWebview);
 
+  wvHome.addEventListener("click", () => {
+    window.location.href = "index.html"; 
+  });
+
   wvOpenBrowser.addEventListener("click", () => {
     if (currentItem) window.open(currentItem.url, "_blank", "noopener");
   });
-
-  wvTranslate.addEventListener("click", () => {
-    if (!currentItem) return;
-    isTranslated = !isTranslated;
-    wvTranslate.classList.toggle("active", isTranslated);
-
-    wvBlocked.classList.remove("show");
-    wvLoading.style.display = "flex";
-    wvLoading.style.opacity = "1";
-    wvIframe.style.visibility = "hidden";
-
-    clearTimeout(loadTimer);
-    wvIframe.src = isTranslated ? translateUrl(currentItem.url) : currentItem.url;
-    wvUrl.textContent = isTranslated ? "Diterjemahkan ke Indonesia via Google Translate" : currentItem.url;
-    loadTimer = setTimeout(() => showBlocked(currentItem), 3500);
-  });
-
   wvBlockedOpen.addEventListener("click", () => {
-    if (!currentItem) return;
-    const target = isTranslated ? translateUrl(currentItem.url) : currentItem.url;
-    window.open(target, "_blank", "noopener");
+    if (currentItem) window.open(currentItem.url, "_blank", "noopener");
   });
-
-  // ---------- Bottom navbar + mini menu ----------
-  function setActiveNav(catKey){
-    activeCat = catKey;
-    navBtns.forEach(b => b.classList.toggle("active", b.dataset.cat === catKey));
-  }
-
-  function openMiniMenu(catKey){
-    const section = LISTING_DATA.find(s => s.key === catKey);
-    if (!section) return;
-
-    miniMenuTitle.textContent = section.label;
-    miniMenuList.innerHTML = "";
-
-    section.items.forEach(item => {
-      const row = document.createElement("button");
-      row.type = "button";
-      row.className = "mini-item";
-
-      const iconWrap = document.createElement("div");
-      iconWrap.className = "mini-item-icon";
-      iconWrap.appendChild(iconEl(item, 18));
-
-      const text = document.createElement("span");
-      text.className = "mini-item-text";
-      text.textContent = item.title;
-
-      row.appendChild(iconWrap);
-      row.appendChild(text);
-      row.addEventListener("click", () => {
-        closeMiniMenu();
-        requestOpen(item);
-      });
-
-      miniMenuList.appendChild(row);
-    });
-
-    miniMenuBackdrop.classList.add("open");
-    miniMenu.classList.add("open");
-  }
-
-  function closeMiniMenu(){
-    miniMenuBackdrop.classList.remove("open");
-    miniMenu.classList.remove("open");
-  }
-
-  navBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const cat = btn.dataset.cat;
-      setActiveNav(cat);
-      openMiniMenu(cat);
-    });
-  });
-
-  miniMenuBackdrop.addEventListener("click", closeMiniMenu);
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape"){
-      closeMiniMenu();
       closeConfirm();
+      closeSideMenu();
       if (webviewScreen.classList.contains("open")) closeWebview();
     }
   });
