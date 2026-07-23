@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeApp Login</title>
+<style>
+  /* Reset dasar biar mulus */
+  body {
+    background-color: #1f1f1f;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  /* Tulisan DeApp di atas */
+  .header-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 50px;
+    letter-spacing: 1px;
+  }
+
+  /* Kotak login utamanya */
+  .login-container {
+    position: relative;
+    border: 2px solid #ffcc00; /* Garis kuning */
+    border-radius: 20px;
+    padding: 45px 30px 30px;
+    width: 260px;
+    text-align: center;
+    background-color: transparent;
+  }
+
+  /* Tab "LOGIN" warna kuning */
+  .login-badge {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffcc00;
+    color: black;
+    font-weight: bold;
+    padding: 4px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  .pin-label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 15px;
+  }
+
+  /* Box input PIN */
+  .pin-input {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #737373; /* Warna abu-abu kayak di gambar */
+    border: 2px solid #ffcc00;
+    border-radius: 8px;
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-size: 16px;
+    letter-spacing: 3px;
+    margin-bottom: 35px;
+    outline: none;
+  }
+
+  .pin-input::placeholder {
+    color: white;
+    letter-spacing: 2px;
+  }
+
+  /* Tombol Confirm */
+  .confirm-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    color: #ff4d4d; /* Merah pas awal / kalau PIN salah */
+  }
+
+  /* Class tambahan pas PIN bener */
+  .confirm-btn.valid {
+    color: #4CAF50; /* Berubah ijo pas PIN bener */
+  }
+</style>
+</head>
+<body>
+
+  <div class="header-title">DeApp</div>
+
+  <div class="login-container">
+    <div class="login-badge">LOGIN</div>
+    <div class="pin-label">insert PIN</div>
+    <!-- Max length diset 9 sesuai jumlah digit PIN lu -->
+    <input type="password" id="pinInput" class="pin-input" placeholder="xxxxxxxxx" maxlength="9">
+    <button id="confirmBtn" class="confirm-btn">Confirm</button>
+  </div>
+
+  <script>
+    const pinInput = document.getElementById('pinInput');
+    const confirmBtn = document.getElementById('confirmBtn');
+    
+    // Ini PIN rahasianya
+    const correctPin = "176420193";
+
+    // Event listener biar ngecek otomatis setiap kali ngetik
+    pinInput.addEventListener('input', () => {
+      if (pinInput.value === correctPin) {
+        confirmBtn.classList.add('valid'); // Tambah class .valid (ijo)
+      } else {
+        confirmBtn.classList.remove('valid'); // Hapus class .valid (balik merah)
+      }
+    });
+
+    // Event listener pas tombol confirm di klik
+    confirmBtn.addEventListener('click', () => {
+      if (pinInput.value === correctPin) {
+        // Kalau bener, lempar ke index
+        window.location.href = "index.html"; 
+      } else {
+        // Kalau maksain klik padahal salah
+        alert("PIN salah jirrr! Gabisa masuk."); 
+      }
+    });
+  </script>
+
+</body>
+</html>

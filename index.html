@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>The Listings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --yellow: #FFC630;
+    --bg: #121212;
+    --panel: #1c1c1c;
+    --card-bottom: #2e2e2e;
+    --ink: #161616;
+    --text-soft: #d8d8d8;
+    --text-dim: #939393;
+  }
+
+  *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+
+  html,body{
+    margin:0; padding:0;
+    height:100%;
+    background: var(--bg);
+    color: var(--text-soft);
+    font-family:'Inter', sans-serif;
+    overscroll-behavior:none;
+  }
+
+  #app{
+    position:fixed;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ---------- HOME (grid) ---------- */
+  #home{
+    flex:1;
+    overflow-y:auto;
+    padding: 28px 18px 100px;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .masthead{ text-align:center; margin-bottom:28px; }
+  .masthead h1{
+    font-family:'Baloo 2'; font-weight:800; font-size:26px;
+    color:#fff; margin:0; letter-spacing:.5px;
+  }
+  .masthead p{ margin:6px 0 0; font-size:12.5px; color:var(--text-dim); }
+
+  .category{ margin: 0 0 44px; }
+
+  .category-tab{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--yellow); color:var(--ink);
+    font-family:'Baloo 2'; font-weight:700; font-size:16px;
+    padding:6px 22px; border-radius:8px;
+    margin:0 0 -16px 24px;
+    box-shadow:0 4px 0 rgba(0,0,0,.25);
+    position:relative; z-index:2;
+  }
+
+  .panel{
+    border:2.5px solid var(--yellow); border-radius:26px;
+    padding:26px 14px 16px;
+    background: linear-gradient(180deg, rgba(255,198,48,.05), rgba(255,198,48,0) 30%);
+  }
+
+  .grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px 8px; }
+
+  .card{
+    background:#fff; border:none; border-radius:14px; overflow:hidden;
+    display:flex; flex-direction:column; cursor:pointer; padding:0;
+    transform:scale(1);
+    transition: transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s ease;
+    box-shadow:0 4px 10px rgba(0,0,0,.25);
+    -webkit-user-select:none; user-select:none;
+  }
+  .card.is-pressed{ transform:scale(1.08); box-shadow:0 10px 22px rgba(0,0,0,.4); z-index:3; }
+
+  .card-icon{ flex:1; display:flex; align-items:center; justify-content:center; padding:14px 6px 8px; min-height:50px; }
+  .card-icon img{ width:28px; height:28px; object-fit:contain; border-radius:6px; }
+  .card-icon .fallback-letter{
+    width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2'; font-weight:700; font-size:13px; color:#fff;
+  }
+
+  .card-label{
+    background:var(--card-bottom); color:var(--text-soft); font-size:10.5px; font-weight:600;
+    text-align:center; padding:6px 4px 7px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+
+  /* ---------- WEBVIEW ---------- */
+  #webviewScreen{
+    position:fixed; inset:0; display:flex; flex-direction:column;
+    background:#000; transform:translateX(100%);
+    transition: transform .28s cubic-bezier(.32,.72,.35,1);
+    z-index:20;
+  }
+  #webviewScreen.open{ transform:translateX(0); }
+
+  .webview-topbar{
+    display:flex; align-items:center; gap:10px;
+    padding: 14px 12px; background:#161616;
+    border-bottom:1px solid #262626;
+    flex-shrink:0;
+  }
+  .wv-back{
+    width:34px; height:34px; border-radius:10px; border:none;
+    background:#262626; color:#fff; font-size:18px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .wv-back:active{ transform:scale(.92); }
+
+  .wv-favicon{ width:22px; height:22px; border-radius:5px; background:#fff; flex-shrink:0; }
+  .wv-info{ min-width:0; flex:1; }
+  .wv-title{ font-size:13.5px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .wv-url{ font-size:10.5px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  .wv-translate{
+    width:34px; height:34px; border-radius:10px; border:none;
+    background:#262626; color:var(--yellow); font-size:15px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    flex-shrink:0;
+  }
+  .wv-translate:active{ transform:scale(.92); }
+  .wv-translate svg{ width:17px; height:17px; }
+  .wv-translate.active{ background:var(--yellow); color:var(--ink); }
+
+  .wv-open-browser{
+    width:34px; height:34px; border-radius:10px; border:none;
+    background:#262626; color:var(--yellow); font-size:15px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    flex-shrink:0;
+  }
+
+  .wv-body{ flex:1; position:relative; background:#0e0e0e; }
+  .wv-body iframe{ width:100%; height:100%; border:none; background:#fff; }
+
+  .wv-loading{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:14px; background:#0e0e0e; transition:opacity .25s ease;
+  }
+  .wv-spinner{
+    width:34px; height:34px; border-radius:50%;
+    border:3px solid #333; border-top-color:var(--yellow);
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .wv-loading span{ font-size:12.5px; color:var(--text-dim); }
+
+  .wv-blocked{
+    position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:40px 28px; background:#0e0e0e; gap:14px;
+  }
+  .wv-blocked.show{ display:flex; }
+  .wv-blocked-icon{
+    width:56px; height:56px; border-radius:16px; background:#fff;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .wv-blocked-icon img{ width:32px; height:32px; object-fit:contain; }
+  .wv-blocked h3{ font-family:'Baloo 2'; font-size:17px; color:#fff; margin:0; }
+  .wv-blocked p{ font-size:13px; color:var(--text-dim); margin:0; line-height:1.5; max-width:280px; }
+  .wv-blocked button{
+    margin-top:6px; border:none; border-radius:14px; padding:12px 26px;
+    background:var(--yellow); color:var(--ink); font-family:'Inter'; font-weight:700; font-size:14px;
+    cursor:pointer;
+  }
+  .wv-blocked button:active{ transform:scale(.96); }
+
+  /* ---------- BOTTOM NAVBAR ---------- */
+  #navbar{
+    position:fixed; left:0; right:0; bottom:0;
+    display:flex; justify-content:space-around; align-items:center;
+    background:#1a1a1a; border-top:1px solid #2a2a2a;
+    padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+    z-index:30;
+  }
+
+  .nav-btn{
+    background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:4px;
+    color:var(--text-dim); font-family:'Inter'; font-weight:600; font-size:10.5px; cursor:pointer;
+    padding:4px 14px; border-radius:12px; transition: color .15s ease, background .15s ease, transform .15s ease;
+  }
+  .nav-btn.active{ color:var(--yellow); background:rgba(255,198,48,.1); }
+  .nav-btn:active{ transform:scale(.92); }
+  .nav-icon{ width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
+  .nav-icon svg{ width:22px; height:22px; }
+
+  /* ---------- MINI MENU (popup above navbar) ---------- */
+  #miniMenuBackdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,.45);
+    opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:25;
+  }
+  #miniMenuBackdrop.open{ opacity:1; pointer-events:auto; }
+
+  #miniMenu{
+    position:fixed; left:12px; right:12px; bottom:78px;
+    background:#1e1e1e; border:1.5px solid rgba(255,198,48,.35); border-radius:18px;
+    padding:14px; z-index:26;
+    transform: translateY(12px) scale(.98); opacity:0; pointer-events:none;
+    transition: transform .22s cubic-bezier(.32,.72,.35,1), opacity .2s ease;
+  }
+  #miniMenu.open{ transform:translateY(0) scale(1); opacity:1; pointer-events:auto; }
+
+  .mini-menu-title{
+    font-family:'Baloo 2'; font-weight:700; font-size:14px; color:var(--yellow);
+    margin:0 0 10px 4px;
+  }
+
+  .mini-menu-list{ display:flex; flex-direction:column; gap:4px; }
+
+  .mini-item{
+    display:flex; align-items:center; gap:12px;
+    background:none; border:none; width:100%; text-align:left;
+    padding:9px 8px; border-radius:12px; cursor:pointer;
+    transition: background .15s ease, transform .1s ease;
+  }
+  .mini-item:active{ transform:scale(.98); background:rgba(255,255,255,.06); }
+
+  .mini-item-icon{
+    width:30px; height:30px; border-radius:8px; background:#fff; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .mini-item-icon img{ width:18px; height:18px; object-fit:contain; }
+  .mini-item-icon .fallback-letter{ font-family:'Baloo 2'; font-weight:700; font-size:11px; color:#fff; width:100%; height:100%; border-radius:8px; display:flex; align-items:center; justify-content:center; }
+
+  .mini-item-text{ font-size:13.5px; font-weight:600; color:#fff; }
+
+  @media (prefers-reduced-motion: reduce){
+    .card, #webviewScreen, #miniMenu, #miniMenuBackdrop, #confirmBackdrop, #confirmSheet{ transition:none !important; }
+  }
+
+  /* ---------- CONFIRM MODAL (before entering webview) ---------- */
+  #confirmBackdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,.55);
+    backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    display:flex; align-items:flex-end; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .22s ease;
+    z-index:40;
+  }
+  #confirmBackdrop.open{ opacity:1; pointer-events:auto; }
+
+  #confirmSheet{
+    width:100%; max-width:480px; background:#1e1e1e;
+    border:1.5px solid rgba(255,198,48,.35); border-bottom:none;
+    border-radius:24px 24px 0 0; padding:24px 22px calc(24px + env(safe-area-inset-bottom));
+    transform:translateY(100%); transition:transform .3s cubic-bezier(.32,.72,.35,1);
+  }
+  #confirmBackdrop.open #confirmSheet{ transform:translateY(0); }
+
+  .confirm-handle{ width:40px; height:4px; background:#444; border-radius:999px; margin:0 auto 16px; }
+
+  .confirm-head{ display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+  .confirm-icon{ width:44px; height:44px; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .confirm-title{ font-family:'Baloo 2'; font-weight:700; font-size:17px; color:#fff; margin:0; }
+  .confirm-sub{ font-size:12px; color:var(--text-dim); margin:2px 0 0; word-break:break-all; }
+
+  .confirm-note{
+    display:flex; gap:8px; align-items:flex-start;
+    background:rgba(255,198,48,.08); border:1px solid rgba(255,198,48,.25);
+    border-radius:12px; padding:10px 12px; margin-bottom:16px;
+  }
+  .confirm-note-icon{ font-size:14px; line-height:1.3; flex-shrink:0; }
+  .confirm-note p{ margin:0; font-size:11.5px; line-height:1.5; color:var(--text-soft); }
+
+  .confirm-actions{ display:flex; gap:10px; }
+  .confirm-btn{
+    flex:1; border:none; border-radius:14px; padding:13px 10px;
+    font-family:'Inter'; font-weight:700; font-size:14.5px; cursor:pointer;
+    transition: transform .12s ease, filter .12s ease;
+  }
+  .confirm-btn:active{ transform:scale(.96); }
+  .confirm-btn.cancel{ background:#2c2c2c; color:var(--text-soft); }
+  .confirm-btn.go{ background:var(--yellow); color:var(--ink); }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <div id="home">
+    <div class="masthead">
+      <h1>THE LISTINGS</h1>
+      <p>Ketuk kartu untuk buka di dalam app</p>
+    </div>
+    <div id="categories"></div>
+  </div>
+
+  <div id="webviewScreen">
+    <div class="webview-topbar">
+      <button class="wv-back" id="wvBack">‹</button>
+      <div class="wv-favicon" id="wvFavicon"></div>
+      <div class="wv-info">
+        <div class="wv-title" id="wvTitle">Situs</div>
+        <div class="wv-url" id="wvUrl">https://example.com</div>
+      </div>
+      <button class="wv-translate" id="wvTranslate" title="Terjemahkan ke Indonesia">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h7M7 4v2M6 8c.5 2 2 4 4 5M13 8c-1 3-3 5.5-6 7"/><path d="M14 18l3-8 3 8M14.5 16h5"/></svg>
+      </button>
+      <button class="wv-open-browser" id="wvOpenBrowser" title="Buka di browser">↗</button>
+    </div>
+    <div class="wv-body">
+      <iframe id="wvIframe" src="about:blank" referrerpolicy="no-referrer"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"></iframe>
+      <div class="wv-loading" id="wvLoading">
+        <div class="wv-spinner"></div>
+        <span>Memuat situs…</span>
+      </div>
+      <div class="wv-blocked" id="wvBlocked">
+        <div class="wv-blocked-icon" id="wvBlockedIcon"></div>
+        <h3 id="wvBlockedTitle">Situs ini tidak bisa ditampilkan di dalam app</h3>
+        <p>Beberapa situs mengunci diri agar hanya bisa dibuka lewat browser penuh. Buka di browser untuk melanjutkan.</p>
+        <button id="wvBlockedOpen">Buka di browser</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="navbar">
+    <button class="nav-btn active" data-cat="17">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      </span>
+      17
+    </button>
+    <button class="nav-btn" data-cat="sport">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M6 6l12 12M18 6L6 18"/></svg>
+      </span>
+      Sport
+    </button>
+    <button class="nav-btn" data-cat="daily">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 3v18M3 9h18"/></svg>
+      </span>
+      Daily
+    </button>
+  </div>
+
+</div>
+
+<div id="miniMenuBackdrop"></div>
+<div id="miniMenu">
+  <p class="mini-menu-title" id="miniMenuTitle">Kategori</p>
+  <div class="mini-menu-list" id="miniMenuList"></div>
+</div>
+
+<div id="confirmBackdrop">
+  <div id="confirmSheet">
+    <div class="confirm-handle"></div>
+    <div class="confirm-head">
+      <div class="confirm-icon" id="confirmIcon"></div>
+      <div>
+        <p class="confirm-title" id="confirmTitle">Site name</p>
+        <p class="confirm-sub" id="confirmUrl">https://example.com</p>
+      </div>
+    </div>
+    <div class="confirm-note">
+      <span class="confirm-note-icon">🛡️</span>
+      <p>Dibuka di dalam app dengan pop-up &amp; redirect paksa diblokir. Konten dari situs asli tetap di luar kendali kami, jadi sebagian iklan bawaan situs mungkin masih muncul.</p>
+    </div>
+    <div class="confirm-actions">
+      <button class="confirm-btn cancel" id="confirmCancel">Batal</button>
+      <button class="confirm-btn go" id="confirmGo">Buka</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const LISTING_DATA = [
+  { key:"17", label:"17", items:[
+    { title:"Manhwaweb", url:"https://manhwaweb.com/", domain:"manhwaweb.com", fallbackColor:"#6C4AB6" },
+    { title:"Mangapoi", url:"https://v2.mangapoi.one/", domain:"v2.mangapoi.one", fallbackColor:"#2E8B57" },
+    { title:"Manhwadesu", url:"https://manhwadesu.im/", domain:"manhwadesu.im", fallbackColor:"#C0392B" },
+    { title:"Omega Scans", url:"https://omegascans.org/", domain:"omegascans.org", fallbackColor:"#1F1F1F" }
+  ]},
+  { key:"sport", label:"Sport", items:[
+    { title:"UEFA", url:"https://www.uefa.com/", domain:"www.uefa.com", fallbackColor:"#004C99" },
+    { title:"FIFA", url:"https://www.fifa.com/", domain:"www.fifa.com", fallbackColor:"#0A2A6B" },
+    { title:"LaLiga", url:"https://www.laliga.com/en-GB/", domain:"www.laliga.com", fallbackColor:"#EE2624" },
+    { title:"Transfermarkt", url:"https://www.transfermarkt.co.id/", domain:"www.transfermarkt.co.id", fallbackColor:"#1A7A3C" },
+    { title:"EPL", url:"https://www.premierleague.com/", domain:"www.premierleague.com", fallbackColor:"#3D0E5C" }
+  ]},
+  { key:"daily", label:"Daily", items:[
+    { title:"TikTok", url:"https://www.tiktok.com/id-ID/", domain:"www.tiktok.com", fallbackColor:"#000000" },
+    { title:"Instagram", url:"https://www.instagram.com/", domain:"www.instagram.com", fallbackColor:"#C1327A" },
+    { title:"X", url:"https://x.com/", domain:"x.com", fallbackColor:"#000000" }
+  ]}
+];
+
+(function(){
+  const categoriesRoot = document.getElementById("categories");
+  const home = document.getElementById("home");
+  const navbar = document.getElementById("navbar");
+  const navBtns = [...navbar.querySelectorAll(".nav-btn")];
+
+  const miniMenuBackdrop = document.getElementById("miniMenuBackdrop");
+  const miniMenu = document.getElementById("miniMenu");
+  const miniMenuTitle = document.getElementById("miniMenuTitle");
+  const miniMenuList = document.getElementById("miniMenuList");
+
+  const confirmBackdrop = document.getElementById("confirmBackdrop");
+  const confirmIcon = document.getElementById("confirmIcon");
+  const confirmTitle = document.getElementById("confirmTitle");
+  const confirmUrl = document.getElementById("confirmUrl");
+  const confirmCancel = document.getElementById("confirmCancel");
+  const confirmGo = document.getElementById("confirmGo");
+
+  const webviewScreen = document.getElementById("webviewScreen");
+  const wvBack = document.getElementById("wvBack");
+  const wvFavicon = document.getElementById("wvFavicon");
+  const wvTitle = document.getElementById("wvTitle");
+  const wvUrl = document.getElementById("wvUrl");
+  const wvOpenBrowser = document.getElementById("wvOpenBrowser");
+  const wvTranslate = document.getElementById("wvTranslate");
+  const wvIframe = document.getElementById("wvIframe");
+  const wvLoading = document.getElementById("wvLoading");
+  const wvBlocked = document.getElementById("wvBlocked");
+  const wvBlockedIcon = document.getElementById("wvBlockedIcon");
+  const wvBlockedTitle = document.getElementById("wvBlockedTitle");
+  const wvBlockedOpen = document.getElementById("wvBlockedOpen");
+
+  let currentItem = null;
+  let loadTimer = null;
+  let activeCat = "17";
+  let isTranslated = false;
+
+  function translateUrl(url){
+    return `https://translate.google.com/translate?sl=auto&tl=id&u=${encodeURIComponent(url)}`;
+  }
+
+  function faviconUrl(domain){
+    return `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
+  }
+
+  function iconEl(item, size){
+    const wrap = document.createElement("div");
+    const img = document.createElement("img");
+    img.src = faviconUrl(item.domain);
+    img.alt = "";
+    img.loading = "lazy";
+    img.style.width = size + "px";
+    img.style.height = size + "px";
+    img.style.objectFit = "contain";
+    img.onerror = () => {
+      wrap.innerHTML = "";
+      const fb = document.createElement("div");
+      fb.className = "fallback-letter";
+      fb.style.width = size + "px";
+      fb.style.height = size + "px";
+      fb.style.background = item.fallbackColor || "#555";
+      fb.style.borderRadius = "7px";
+      fb.style.display = "flex";
+      fb.style.alignItems = "center";
+      fb.style.justifyContent = "center";
+      fb.style.fontFamily = "'Baloo 2'";
+      fb.style.fontWeight = "700";
+      fb.style.color = "#fff";
+      fb.textContent = item.title.charAt(0);
+      wrap.appendChild(fb);
+    };
+    wrap.appendChild(img);
+    return wrap;
+  }
+
+  function buildCard(item){
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "card";
+    card.setAttribute("aria-label", `Buka ${item.title}`);
+
+    const iconWrap = document.createElement("div");
+    iconWrap.className = "card-icon";
+    iconWrap.appendChild(iconEl(item, 28));
+    card.appendChild(iconWrap);
+
+    const label = document.createElement("div");
+    label.className = "card-label";
+    label.textContent = item.title;
+    card.appendChild(label);
+
+    const press = () => card.classList.add("is-pressed");
+    const release = () => card.classList.remove("is-pressed");
+    card.addEventListener("pointerdown", press);
+    card.addEventListener("pointerup", release);
+    card.addEventListener("pointerleave", release);
+    card.addEventListener("pointercancel", release);
+    card.addEventListener("click", () => requestOpen(item));
+
+    return card;
+  }
+
+  function buildCategory(section){
+    const wrap = document.createElement("div");
+    wrap.className = "category";
+    wrap.id = "cat-" + section.key;
+
+    const tab = document.createElement("div");
+    tab.className = "category-tab";
+    tab.textContent = section.label;
+
+    const panel = document.createElement("div");
+    panel.className = "panel";
+    const grid = document.createElement("div");
+    grid.className = "grid";
+    section.items.forEach(item => grid.appendChild(buildCard(item)));
+    panel.appendChild(grid);
+
+    wrap.appendChild(tab);
+    wrap.appendChild(panel);
+    return wrap;
+  }
+
+  function renderHome(){
+    LISTING_DATA.forEach(section => categoriesRoot.appendChild(buildCategory(section)));
+  }
+
+  // ---------- Confirm before entering webview ----------
+  let pendingItem = null;
+
+  function requestOpen(item){
+    pendingItem = item;
+    confirmTitle.textContent = item.title;
+    confirmUrl.textContent = item.url;
+    confirmIcon.innerHTML = "";
+    confirmIcon.appendChild(iconEl(item, 26));
+    confirmBackdrop.classList.add("open");
+  }
+
+  function closeConfirm(){
+    confirmBackdrop.classList.remove("open");
+    pendingItem = null;
+  }
+
+  confirmCancel.addEventListener("click", closeConfirm);
+  confirmBackdrop.addEventListener("click", (e) => {
+    if (e.target === confirmBackdrop) closeConfirm();
+  });
+  confirmGo.addEventListener("click", () => {
+    if (pendingItem){
+      const item = pendingItem;
+      closeConfirm();
+      openWebview(item);
+    }
+  });
+
+  // ---------- Webview ----------
+  function openWebview(item){
+    currentItem = item;
+    isTranslated = false;
+    wvTranslate.classList.remove("active");
+    wvTitle.textContent = item.title;
+    wvUrl.textContent = item.url;
+
+    wvFavicon.innerHTML = "";
+    wvFavicon.appendChild(iconEl(item, 22));
+
+    wvBlocked.classList.remove("show");
+    wvLoading.style.opacity = "1";
+    wvLoading.style.display = "flex";
+    wvIframe.style.visibility = "hidden";
+
+    wvIframe.src = item.url;
+    webviewScreen.classList.add("open");
+
+    clearTimeout(loadTimer);
+    // If the site blocks embedding, the load/error events from a cross-origin
+    // iframe won't reliably fire — so we fall back to a friendly "blocked" screen
+    // after a short grace period if nothing has rendered.
+    loadTimer = setTimeout(() => showBlocked(item), 3500);
+  }
+
+  wvIframe.addEventListener("load", () => {
+    if (wvIframe.src === "about:blank") return;
+    clearTimeout(loadTimer);
+    // Try to detect an actually-blocked page (many CSP blocks still fire "load"
+    // on an empty/error document). We can't read cross-origin content, so we
+    // give the frame a brief moment to paint, then just reveal it — if it was
+    // truly blocked, the browser will already show its own refusal message
+    // and the user has the "buka di browser" fallback button anytime.
+    wvLoading.style.opacity = "0";
+    setTimeout(() => { wvLoading.style.display = "none"; }, 250);
+    wvIframe.style.visibility = "visible";
+  });
+
+  function showBlocked(item){
+    wvLoading.style.display = "none";
+    wvIframe.style.visibility = "hidden";
+    if (isTranslated){
+      wvBlockedTitle.textContent = `Versi terjemahan tidak bisa ditampilkan di dalam app`;
+    } else {
+      wvBlockedTitle.textContent = `${item.title} tidak bisa ditampilkan di dalam app`;
+    }
+    wvBlockedIcon.innerHTML = "";
+    wvBlockedIcon.appendChild(iconEl(item, 32));
+    wvBlocked.classList.add("show");
+  }
+
+  function closeWebview(){
+    webviewScreen.classList.remove("open");
+    clearTimeout(loadTimer);
+    setTimeout(() => { wvIframe.src = "about:blank"; }, 300);
+  }
+
+  wvBack.addEventListener("click", closeWebview);
+
+  wvOpenBrowser.addEventListener("click", () => {
+    if (currentItem) window.open(currentItem.url, "_blank", "noopener");
+  });
+
+  wvTranslate.addEventListener("click", () => {
+    if (!currentItem) return;
+    isTranslated = !isTranslated;
+    wvTranslate.classList.toggle("active", isTranslated);
+
+    wvBlocked.classList.remove("show");
+    wvLoading.style.display = "flex";
+    wvLoading.style.opacity = "1";
+    wvIframe.style.visibility = "hidden";
+
+    clearTimeout(loadTimer);
+    wvIframe.src = isTranslated ? translateUrl(currentItem.url) : currentItem.url;
+    wvUrl.textContent = isTranslated ? "Diterjemahkan ke Indonesia via Google Translate" : currentItem.url;
+    loadTimer = setTimeout(() => showBlocked(currentItem), 3500);
+  });
+
+  wvBlockedOpen.addEventListener("click", () => {
+    if (!currentItem) return;
+    const target = isTranslated ? translateUrl(currentItem.url) : currentItem.url;
+    window.open(target, "_blank", "noopener");
+  });
+
+  // ---------- Bottom navbar + mini menu ----------
+  function setActiveNav(catKey){
+    activeCat = catKey;
+    navBtns.forEach(b => b.classList.toggle("active", b.dataset.cat === catKey));
+  }
+
+  function openMiniMenu(catKey){
+    const section = LISTING_DATA.find(s => s.key === catKey);
+    if (!section) return;
+
+    miniMenuTitle.textContent = section.label;
+    miniMenuList.innerHTML = "";
+
+    section.items.forEach(item => {
+      const row = document.createElement("button");
+      row.type = "button";
+      row.className = "mini-item";
+
+      const iconWrap = document.createElement("div");
+      iconWrap.className = "mini-item-icon";
+      iconWrap.appendChild(iconEl(item, 18));
+
+      const text = document.createElement("span");
+      text.className = "mini-item-text";
+      text.textContent = item.title;
+
+      row.appendChild(iconWrap);
+      row.appendChild(text);
+      row.addEventListener("click", () => {
+        closeMiniMenu();
+        requestOpen(item);
+      });
+
+      miniMenuList.appendChild(row);
+    });
+
+    miniMenuBackdrop.classList.add("open");
+    miniMenu.classList.add("open");
+  }
+
+  function closeMiniMenu(){
+    miniMenuBackdrop.classList.remove("open");
+    miniMenu.classList.remove("open");
+  }
+
+  navBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const cat = btn.dataset.cat;
+      setActiveNav(cat);
+      openMiniMenu(cat);
+    });
+  });
+
+  miniMenuBackdrop.addEventListener("click", closeMiniMenu);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape"){
+      closeMiniMenu();
+      closeConfirm();
+      if (webviewScreen.classList.contains("open")) closeWebview();
+    }
+  });
+
+  renderHome();
+})();
+</script>
+</body>
+</html>
