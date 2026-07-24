@@ -292,7 +292,7 @@
     </div>
     
     <div class="wv-body">
-      <iframe id="wvIframe" src="about:blank" referrerpolicy="no-referrer"
+      <iframe id="wvIframe" src="about:blank" allow="autoplay; encrypted-media" referrerpolicy="no-referrer"
         sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"></iframe>
       <div class="wv-loading" id="wvLoading">
         <div class="wv-spinner"></div>
@@ -344,19 +344,31 @@
 </div>
 
 <script>
+// DAFTAR LINK UPDATE-AN BARU
 const LISTING_DATA = [
   { key:"daily", label:"Daily", items:[
     { title:"TikTok", url:"https://www.tiktok.com/id-ID/", domain:"www.tiktok.com", fallbackColor:"#000000" },
     { title:"Instagram", url:"https://www.instagram.com/", domain:"www.instagram.com", fallbackColor:"#C1327A" },
     { title:"X", url:"https://x.com/", domain:"x.com", fallbackColor:"#000000" },
+    { title:"Facebook", url:"https://www.facebook.com/", domain:"facebook.com", fallbackColor:"#1877F2" },
+    { title:"Threads", url:"https://www.threads.net/", domain:"threads.net", fallbackColor:"#000000" },
     { title:"RCTI+", url:"https://www.rctiplus.com/", domain:"www.rctiplus.com", fallbackColor:"#FF0000" },
-    { title:"Vidio", url:"https://www.vidio.com/", domain:"www.vidio.com", fallbackColor:"#E50914" }
+    { title:"Vidio", url:"https://www.vidio.com/", domain:"www.vidio.com", fallbackColor:"#E50914" },
+    { title:"Google Search", url:"https://www.google.com/", domain:"www.google.com", fallbackColor:"#4285F4" },
+    { title:"GitHub", url:"https://github.com/", domain:"github.com", fallbackColor:"#24292e" },
+    { title:"YouTube", url:"https://www.youtube.com/", domain:"youtube.com", fallbackColor:"#FF0000" },
+    { title:"Spotify", url:"https://open.spotify.com/", domain:"spotify.com", fallbackColor:"#1DB954" }
   ]},
   { key:"17", label:"17", items:[
     { title:"Manhwaweb", url:"https://manhwaweb.com/", domain:"manhwaweb.com", fallbackColor:"#6C4AB6" },
     { title:"Mangapoi", url:"https://v2.mangapoi.one/", domain:"v2.mangapoi.one", fallbackColor:"#2E8B57" },
     { title:"Manhwadesu", url:"https://manhwadesu.im/", domain:"manhwadesu.im", fallbackColor:"#C0392B" },
-    { title:"Omega Scans", url:"https://omegascans.org/", domain:"omegascans.org", fallbackColor:"#1F1F1F" }
+    { title:"Omega Scans", url:"https://omegascans.org/", domain:"omegascans.org", fallbackColor:"#1F1F1F" },
+    { title:"Raja Hentai", url:"http://rajahentai.com/", domain:"rajahentai.com", fallbackColor:"#24292e" },
+    { title:"JAV porn Pics", url:"https://javpornpics.com/", domain:"javpornpics.com", fallbackColor:"#24292e" },
+    { title:"Fapello", url:"https://fapello.com/", domain:"fapello.com", fallbackColor:"#24292e" },
+    { title:"GitHub 1", url:"https://github 1.com/", domain:"github 1.com", fallbackColor:"#24292e" },
+    { title:"GitHub 2", url:"https://github 2.com/", domain:"github 2.com", fallbackColor:"#24292e" }
   ]},
   { key:"sport", label:"Sport", items:[
     { title:"UEFA", url:"https://www.uefa.com/", domain:"www.uefa.com", fallbackColor:"#004C99" },
